@@ -54,6 +54,15 @@ target_link_libraries(pose_bridge
 ament_target_dependencies(pose_bridge ${dependencies})
 ament_target_dependencies(pose_bridge ros_gz_bridge)
 
+# rfid_bridge nodes
+add_executable(rfid_bridge  src/rfid_bridge_node.cpp src/rfid_bridge_main.cpp)
+target_link_libraries(rfid_bridge
+    ignition-msgs${IGN_MSGS_VER}::core
+    ignition-transport${IGN_TRANSPORT_VER}::core
+)
+ament_target_dependencies(rfid_bridge ${dependencies})
+ament_target_dependencies(rfid_bridge ros_gz_bridge)
+
 # Install include directories
 install(DIRECTORY include/
   DESTINATION include
@@ -71,6 +80,7 @@ install(DIRECTORY include/
 # Install executables
 install(TARGETS
       pose_bridge
+      rfid_bridge
   DESTINATION lib/${PROJECT_NAME}
 )
 
