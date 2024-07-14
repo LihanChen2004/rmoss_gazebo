@@ -40,6 +40,9 @@ void IgnShootActuator::set(const rmoss_interfaces::msg::ShootCmd & data)
   if (remain_num_ <= 0) {
     enable_ = false;
   }
+  else{
+    enable_ = true;
+  }
   if (!enable_) {
     return;
   }
