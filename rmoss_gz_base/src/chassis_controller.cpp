@@ -34,7 +34,8 @@ ChassisController::ChassisController(
   // sensor data
   gimbal_encoder_->add_callback(
     [this](const rmoss_interfaces::msg::Gimbal & data, const rclcpp::Time & /*stamp*/) {
-      cur_yaw_ = data.yaw;
+      // Limit yaw data to [0, 2*PI)
+      cur_yaw_ = std::remainder(data.yaw, 2 * M_PI);
     });
   // ros sub
   using namespace std::placeholders;
@@ -50,13 +51,21 @@ ChassisController::ChassisController(
 
 void ChassisController::update()
 {
-  auto dt = std::chrono::milliseconds(10);
+  static const auto DT = std::chrono::milliseconds(10);
+  geometry_msgs::msg::Twist result_vel;
+
   if (follow_mode_flag_) {
     // follow mode
-    target_vel_.angular.z = chassis_pid_.Update(0 - cur_yaw_, dt);
+    result_vel.linear = target_vel_.linear;
+    result_vel.angular.z = chassis_pid_.Update(-cur_yaw_, DT);
+  } else {
+    // const spin mode
+    result_vel.angular.z = 3.14;
+    result_vel.linear.x =  target_vel_.linear.x * std::cos(-cur_yaw_) + target_vel_.linear.y * std::sin(-cur_yaw_);
+    result_vel.linear.y = -target_vel_.linear.x * std::sin(-cur_yaw_) + target_vel_.linear.y * std::cos(-cur_yaw_);
   }
   // publish CMD
-  chassis_actuator_->set(target_vel_);
+  chassis_actuator_->set(result_vel);
 }
 
 void ChassisController::chassis_cb(const rmoss_interfaces::msg::ChassisCmd::SharedPtr msg)
