@@ -52,6 +52,7 @@ ChassisController::ChassisController(
 void ChassisController::update()
 {
   static const auto DT = std::chrono::milliseconds(10);
+  static bool first_move_detection = false;
   geometry_msgs::msg::Twist result_vel;
 
   if (follow_mode_flag_) {
@@ -60,7 +61,10 @@ void ChassisController::update()
     result_vel.angular.z = chassis_pid_.Update(-cur_yaw_, DT);
   } else {
     // const spin mode
-    result_vel.angular.z = 3.14;
+    if (!first_move_detection && (std::abs(target_vel_.linear.x) > 0.2 || std::abs(target_vel_.linear.y) > 0.2)) {
+      first_move_detection = true;
+    }
+    result_vel.angular.z = first_move_detection ? M_PI : 0.0;
     result_vel.linear.x =  target_vel_.linear.x * std::cos(-cur_yaw_) + target_vel_.linear.y * std::sin(-cur_yaw_);
     result_vel.linear.y = -target_vel_.linear.x * std::sin(-cur_yaw_) + target_vel_.linear.y * std::cos(-cur_yaw_);
   }
