@@ -42,10 +42,9 @@ RfidBridgeNode::RfidBridgeNode(const rclcpp::NodeOptions & options)
   // get rfid status from ignition gazebo
   gz_node_->Subscribe(gz_blue_supplier_rfid_topic, &RfidBridgeNode::gz_rfid_cb, this);
   gz_node_->Subscribe(gz_red_supplier_rfid_topic, &RfidBridgeNode::gz_rfid_cb, this);
-  
+
   rfid_pub_ = node_->create_publisher<rmoss_interfaces::msg::RfidStatusArray>(
-    "/referee_system/ign/rfid_info", 10);
- 
+    "/referee_system/rfid_info", 10);
 }
 
 void RfidBridgeNode::gz_rfid_cb(const ignition::msgs::Pose & msg)
@@ -71,4 +70,4 @@ void RfidBridgeNode::gz_rfid_cb(const ignition::msgs::Pose & msg)
   }
 }
 
-}
+}  // namespace rmoss_gz_bridge

@@ -37,12 +37,11 @@ PoseBridgeNode::PoseBridgeNode(const rclcpp::NodeOptions & options)
   gz_service_name_ = "/world/" + world_name + "/set_pose";
   // get pose from ignition gazebo
   gz_node_->Subscribe(gz_topic, &PoseBridgeNode::gz_pose_cb, this);
-  pose_pub_ = node_->create_publisher<tf2_msgs::msg::TFMessage>(
-    "/referee_system/ign/pose_info", 10);
+  pose_pub_ = node_->create_publisher<tf2_msgs::msg::TFMessage>("/referee_system/pose_info", 10);
   // set pose to ignition gazebo
   using namespace std::placeholders;
   set_pose_sub_ = node_->create_subscription<geometry_msgs::msg::TransformStamped>(
-    "/referee_system/ign/set_pose", 10, std::bind(&PoseBridgeNode::set_pose_cb, this, _1));
+    "/referee_system/set_pose", 10, std::bind(&PoseBridgeNode::set_pose_cb, this, _1));
 }
 
 void PoseBridgeNode::gz_pose_cb(const ignition::msgs::Pose_V & msg)
