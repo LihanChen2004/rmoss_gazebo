@@ -20,6 +20,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "rmoss_interfaces/msg/gimbal_cmd.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 #include "rmoss_interfaces/msg/gimbal.hpp"
 #include "pid.hpp"
 #include "hardware_interface.hpp"
@@ -47,14 +48,16 @@ public:
 
 private:
   void gimbal_cb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg);
+  void gimbal_joint_cb(const sensor_msgs::msg::JointState::SharedPtr msg);
   void update();
   void gimbal_state_timer_cb();
 
 private:
   rclcpp::Node::SharedPtr node_;
   // ros pub and sub
-  rclcpp::Subscription<rmoss_interfaces::msg::GimbalCmd>::SharedPtr ros_gimbal_cmd_sub_;
-  rclcpp::Publisher<rmoss_interfaces::msg::Gimbal>::SharedPtr ros_gimbal_state_pub_;
+  rclcpp::Subscription<rmoss_interfaces::msg::GimbalCmd>::SharedPtr rmoss_gimbal_cmd_sub_;
+  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr ros_gimbal_cmd_sub_;
+  rclcpp::Publisher<rmoss_interfaces::msg::Gimbal>::SharedPtr rmoss_gimbal_state_pub_;
   rclcpp::TimerBase::SharedPtr controller_timer_;
   rclcpp::TimerBase::SharedPtr gimbal_state_timer_;
   // control interface
