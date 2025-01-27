@@ -17,6 +17,7 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(example_interfaces REQUIRED)
 find_package(rmoss_interfaces REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(ros_gz_bridge REQUIRED)
@@ -59,6 +60,7 @@ set(dependencies
   geometry_msgs
   sensor_msgs
   nav_msgs
+  example_interfaces
   rmoss_interfaces
   tf2_ros
 )
