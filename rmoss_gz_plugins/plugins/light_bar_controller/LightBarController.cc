@@ -38,23 +38,30 @@ using namespace systems;
 sdf::Material GetMaterial(int state){
     sdf::Material m;
     ignition::math::Color color;
+    ignition::math::Color emissiveColor;
+
     if(state == 0){
-        color.Set(1,1,1,1);
+        color.Set(1, 1, 1, 1);
+        emissiveColor.Set(0.5, 0.5, 0.5, 1);
     }else if(state == 1){
-        color.Set(1,0,0,1);
+        color.Set(1, 0, 0, 1);
+        emissiveColor.Set(1, 0.2, 0.2, 1);
     }else if(state == 2){
-        color.Set(0,0,1,1);
+        color.Set(0, 0, 1, 1);
+        emissiveColor.Set(0.2, 0.2, 1, 1);
     }else if(state == 3){
-        color.Set(1,1,0,1);
+        color.Set(1, 1, 0, 1);
+        emissiveColor.Set(1, 1, 0.2, 1);
     }else{
-        color.Set(1,1,1,1);
+        color.Set(1, 1, 1, 1);
+        emissiveColor.Set(1, 1, 1, 1);
     }
+
     m.SetAmbient(color);
     m.SetDiffuse(color);
     m.SetSpecular(color);
-    if(state != 0){
-        m.SetEmissive(color);
-    }
+    m.SetEmissive(emissiveColor);
+
     return m;
 }
 
